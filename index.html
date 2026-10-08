@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reputation Agents for Fertility Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column like a course site, sticky section nav on wide screens; four track cards share one data contract */
+:root {
+  --bg: #f6f7fa;
+  --surface: #ffffff;
+  --fg: #1d2030;
+  --muted: #5b6075;
+  --line: #dde0ea;
+  --accent: #6b2f7a;
+  --accent-soft: #f1e8f4;
+  --t1: #2d5f8a; --t2: #6b2f7a; --t3: #2f7a6a; --t4: #9a5a1c;
+  --star: #b7791f;
+  --ok: #2f7a55;
+  --bad: #a83a3a;
+  --bad-soft: #f8e9e9;
+  --warn: #9a6a10;
+  --warn-soft: #fbf1dc;
+  --todo-bg: #fff6d6;
+  --todo-fg: #6b5410;
+  --code-bg: #eef0f5;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15161e; --surface: #1d1f2a; --fg: #e6e7ee; --muted: #a2a6ba; --line: #2f3242;
+    --accent: #d39be2; --accent-soft: #2e2236;
+    --t1: #8ab8e0; --t2: #d39be2; --t3: #7fcdbb; --t4: #e5a96a;
+    --star: #e3b04b; --ok: #79c99d; --bad: #ec8f8f; --bad-soft: #352121; --warn: #e8c070; --warn-soft: #33291a;
+    --todo-bg: #3a3016; --todo-fg: #f1d88a; --code-bg: #232634; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15161e; --surface: #1d1f2a; --fg: #e6e7ee; --muted: #a2a6ba; --line: #2f3242;
+  --accent: #d39be2; --accent-soft: #2e2236;
+  --t1: #8ab8e0; --t2: #d39be2; --t3: #7fcdbb; --t4: #e5a96a;
+  --star: #e3b04b; --ok: #79c99d; --bad: #ec8f8f; --bad-soft: #352121; --warn: #e8c070; --warn-soft: #33291a;
+  --todo-bg: #3a3016; --todo-fg: #f1d88a; --code-bg: #232634; color-scheme: dark;
+}
+
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 1.0625rem; line-height: 1.65; }
+.wrap { max-width: 70rem; margin: 0 auto; padding-inline: 1.25rem; padding-block: 2.5rem 4rem; display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 3rem; }
+@media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; padding-block: 1.5rem 3rem; } }
+
+h1, h2, h3, h4 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 1.2rem; font-weight: 700; }
+h4 { font-size: 0.95rem; font-weight: 500; }
+p { margin: 0; max-width: 66ch; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg); padding: 0.05em 0.3em; border-radius: 3px; }
+.eyebrow { font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.todo { background: var(--todo-bg); color: var(--todo-fg); padding: 0 0.3em; border-radius: 3px; font-family: var(--mono); font-size: 0.85em; }
+ul { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.3rem; }
+
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1.5rem); align-self: start; display: grid; gap: 0.25rem; font-family: var(--display); font-size: 0.95rem; }
+nav.toc a { color: var(--muted); text-decoration: none; padding: 0.22rem 0 0.22rem 0.75rem; border-left: 2px solid var(--line); }
+nav.toc a.sub { padding-left: 1.5rem; font-size: 0.88rem; }
+nav.toc a:hover { color: var(--fg); border-left-color: var(--accent); }
+nav.toc .eyebrow { margin-bottom: 0.5rem; }
+@media (max-width: 860px) {
+  nav.toc { position: static; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  nav.toc .eyebrow { width: 100%; margin-bottom: 0; }
+  nav.toc a, nav.toc a.sub { border: 1px solid var(--line); border-radius: 999px; padding: 0.15rem 0.7rem; font-size: 0.85rem; }
+}
+
+main { display: grid; gap: 3.5rem; min-width: 0; }
+section { display: grid; gap: 1rem; scroll-margin-top: 1.5rem; min-width: 0; }
+
+header.hero { display: grid; gap: 1rem; padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
+.hero .sub { font-size: 1.2rem; color: var(--muted); }
+.byline { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: 0.95rem; }
+.byline b { font-family: var(--display); font-weight: 500; }
+
+.questions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 620px) { .questions { grid-template-columns: minmax(0, 1fr); } }
+.questions div { border-left: 3px solid var(--line); padding: 0.2rem 0 0.2rem 0.9rem; display: grid; gap: 0.2rem; }
+.questions .kind { font-family: var(--display); font-weight: 700; }
+.questions p { font-size: 0.95rem; color: var(--muted); }
+
+/* architecture */
+.arch { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto auto; gap: 0.75rem; }
+.node { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 8px; padding: 0.8rem 0.9rem; display: grid; gap: 0.25rem; align-content: start; text-decoration: none; color: inherit; }
+.node:hover { border-color: var(--c); }
+.node .n { font-family: var(--mono); font-size: 0.72rem; color: var(--c); }
+.node h4 { font-size: 1.02rem; }
+.node p { font-size: 0.86rem; color: var(--muted); line-height: 1.45; }
+.node.n1 { --c: var(--t1); grid-column: 1; grid-row: 1; }
+.node.n2 { --c: var(--t2); grid-column: 2; grid-row: 1; }
+.node.n3 { --c: var(--t3); grid-column: 1 / span 2; grid-row: 2; }
+.node.n4 { --c: var(--t4); grid-column: 3; grid-row: 1 / span 2; }
+.arch-note { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+@media (max-width: 720px) { .arch { grid-template-columns: minmax(0, 1fr); } .node.n1, .node.n2, .node.n3, .node.n4 { grid-column: 1; grid-row: auto; } }
+
+/* tracks */
+.track { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem; display: grid; gap: 1rem; scroll-margin-top: 1.5rem; }
+.track .head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem 1rem; flex-wrap: wrap; }
+.track .num { font-family: var(--mono); font-size: 0.78rem; color: var(--c); letter-spacing: 0.06em; text-transform: uppercase; }
+.track h3 { color: var(--fg); }
+.track .q { font-style: italic; color: var(--muted); }
+.track .team { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+.track.t1 { --c: var(--t1); } .track.t2 { --c: var(--t2); } .track.t3 { --c: var(--t3); } .track.t4 { --c: var(--t4); }
+.track .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+@media (max-width: 720px) { .track .cols { grid-template-columns: minmax(0, 1fr); } }
+.track .cols > div { display: grid; gap: 0.45rem; align-content: start; min-width: 0; }
+.track h4 { color: var(--c); font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.track ul { font-size: 0.95rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.chips span { font-family: var(--mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0.05rem 0.45rem; }
+.demo { border-top: 1px dashed var(--line); padding-top: 0.8rem; font-size: 0.95rem; }
+.demo b { font-family: var(--display); font-weight: 500; color: var(--c); }
+.miles { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.3rem 1rem; font-size: 0.93rem; margin: 0; }
+.miles dt { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); padding-top: 0.15rem; font-variant-numeric: tabular-nums; }
+.miles dd { margin: 0; }
+
+pre { margin: 0; background: var(--code-bg); border-radius: 8px; padding: 0.9rem 1rem; overflow-x: auto; font-family: var(--mono); font-size: 0.8rem; line-height: 1.55; }
+pre .k { color: var(--accent); }
+pre .c { color: var(--muted); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 0.93rem; }
+th, td { text-align: left; padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+td.wk { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); width: 3rem; }
+td .topic { font-family: var(--display); font-weight: 500; display: block; }
+td.task { color: var(--muted); }
+tr.milestone td { background: var(--accent-soft); }
+tr.milestone td .topic { color: var(--accent); }
+
+/* example alerts */
+.alerts { display: grid; gap: 0.5rem; }
+.alert { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.75rem; align-items: baseline; padding: 0.55rem 0.8rem; border-radius: 6px; font-size: 0.92rem; }
+.alert .lvl { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
+.alert.high { background: var(--bad-soft); } .alert.high .lvl { color: var(--bad); }
+.alert.med { background: var(--warn-soft); } .alert.med .lvl { color: var(--warn); }
+
+.rules { display: grid; gap: 0.7rem; padding: 0; margin: 0; list-style: none; max-width: 66ch; }
+.rules li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: 0.5rem; }
+.rules li::before { content: "✕"; color: var(--bad); font-family: var(--mono); font-weight: 500; }
+.rules li.yes::before { content: "✓"; color: var(--ok); }
+
+.deliv { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; }
+.deliv div { border-top: 2px solid var(--fg); padding-top: 0.6rem; display: grid; gap: 0.3rem; align-content: start; }
+.deliv .when { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+.deliv p { font-size: 0.95rem; }
+
+dl.people { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.5rem 1.5rem; margin: 0; }
+dl.people dt { font-family: var(--display); font-weight: 500; }
+dl.people dd { margin: 0; }
+@media (max-width: 520px) { dl.people { grid-template-columns: minmax(0, 1fr); gap: 0.1rem; } dl.people dd { margin-bottom: 0.6rem; } }
+
+footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1.25rem; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Sections">
+    <span class="eyebrow">On this page</span>
+    <a href="#introduction">Introduction</a>
+    <a href="#system">The system</a>
+    <a href="#contract">Shared data contract</a>
+    <a href="#tracks">Project tracks</a>
+    <a class="sub" href="#track-1">1 · Data collection</a>
+    <a class="sub" href="#track-2">2 · Analysis</a>
+    <a class="sub" href="#track-3">3 · AI scanning</a>
+    <a class="sub" href="#track-4">4 · Dashboard &amp; alerts</a>
+    <a href="#ground-rules">Ground rules</a>
+    <a href="#schedule">Schedule</a>
+    <a href="#deliverables">Deliverables</a>
+    <a href="#people">Mentors &amp; office hours</a>
+    <a href="#resources">Resources</a>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <span class="eyebrow">Capstone domain of inquiry · <span class="todo">COURSE CODE / SECTION</span> · Fall 2026</span>
+      <h1>Reputation Management with AI Agents for Fertility Care</h1>
+      <p class="sub">Eight students, four tracks, one system: collect what people say about an IVF clinic, understand it, check what AI assistants tell prospective patients, and alert the clinic when something changes.</p>
+      <div class="byline">
+        <span><b>Industry partner:</b> Reproductive Partners Fertility Center</span>
+        <span><b>Mentors:</b> <span class="todo">MENTOR NAMES</span></span>
+        <span><b>Discussion:</b> <span class="todo">Slack / Campuswire link</span></span>
+      </div>
+    </header>
+
+    <section id="introduction">
+      <span class="eyebrow">Introduction</span>
+      <h2>Two kinds of reputation</h2>
+      <p>Choosing an IVF clinic is one of the most expensive and emotional decisions a patient makes, and prospective patients research it heavily. More and more of that research now happens by asking an AI assistant instead of reading reviews directly. That means a clinic has two reputations, and they can disagree.</p>
+      <div class="questions">
+        <div><span class="kind">Patient reputation</span><p>What real patients write in reviews, forums, and social media.</p></div>
+        <div><span class="kind">AI and search reputation</span><p>What Google, ChatGPT, Gemini, Perplexity, or Claude tell someone who asks about the clinic.</p></div>
+      </div>
+      <p>A clinic with mostly positive reviews can still be described poorly by an AI that leans on a few negative Reddit threads. A clinic with great care can go unmentioned because its public information is thin or outdated. This project builds the tools to see both, and to notice when either one shifts.</p>
+      <p><strong>Research question:</strong> Can a set of AI-assisted tools continuously monitor an IVF clinic's patient and AI reputation, surface emerging issues early, and give staff a clear, trustworthy picture of what prospective patients encounter?</p>
+    </section>
+
+    <section id="system">
+      <span class="eyebrow">How the pieces fit</span>
+      <h2>The system</h2>
+      <p>Each track builds a working proof of concept that can be demoed on its own. They connect through a shared data format, so no team waits on another.</p>
+      <div class="arch">
+        <a class="node n1" href="#track-1"><span class="n">Track 1</span><h4>Data collection</h4><p>Reviews, forums, and social posts become standard records.</p></a>
+        <a class="node n2" href="#track-2"><span class="n">Track 2</span><h4>Analysis</h4><p>Each record gets sentiment, topics, and severity.</p></a>
+        <a class="node n3" href="#track-3"><span class="n">Track 3</span><h4>AI scanning</h4><p>A fixed set of patient-style questions is asked of AI assistants and search engines on a schedule. Answers are scored for mentions, sentiment, accuracy, and sources.</p></a>
+        <a class="node n4" href="#track-4"><span class="n">Track 4</span><h4>Dashboard &amp; alerts</h4><p>Trends over time, plus alerts when something needs a person's attention.</p></a>
+      </div>
+      <p class="arch-note">Collection → Analysis → Dashboard. AI scanning feeds the dashboard directly.</p>
+    </section>
+
+    <section id="contract">
+      <span class="eyebrow">Agreed in week 1</span>
+      <h2>Shared data contract</h2>
+      <p>Every team reads and writes these two record types. Until the real pipeline exists, everyone develops against the same set of about 100 synthetic reviews and 20 synthetic AI answers, so all four tracks can start in week 2.</p>
+      <div class="track-code" style="display:grid;gap:0.75rem;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));">
+<pre><span class="c">// reputation_item (Track 1 writes, Track 2 enriches)</span>
+{
+  <span class="k">"id"</span>: "google_8f3a21",
+  <span class="k">"source"</span>: "google",
+  <span class="k">"collected_at"</span>: "2026-10-14T09:00:00Z",
+  <span class="k">"posted_at"</span>: "2026-10-12",
+  <span class="k">"rating"</span>: 2,
+  <span class="k">"text"</span>: "Doctors are great, but nobody
+           returned my call for three days.",
+  <span class="k">"url"</span>: "https://...",
+  <span class="k">"location"</span>: "<span class="todo">clinic site</span>",
+
+  <span class="c">// added by Track 2</span>
+  <span class="k">"sentiment"</span>: "mixed",
+  <span class="k">"aspects"</span>: {
+    "physician": "positive",
+    "communication": "negative"
+  },
+  <span class="k">"severity"</span>: "moderate"
+}</pre>
+<pre><span class="c">// ai_scan_result (Track 3 writes)</span>
+{
+  <span class="k">"run_date"</span>: "2026-10-14",
+  <span class="k">"engine"</span>: "perplexity",
+  <span class="k">"prompt_id"</span>: "Q07",
+  <span class="k">"prompt"</span>: "What do patients say about
+             Reproductive Partners?",
+  <span class="k">"answer"</span>: "...",
+  <span class="k">"clinic_mentioned"</span>: true,
+  <span class="k">"rank"</span>: 1,
+  <span class="k">"sentiment"</span>: "positive",
+  <span class="k">"claims"</span>: [
+    { "text": "...", "accurate": false }
+  ],
+  <span class="k">"competitors"</span>: ["..."],
+  <span class="k">"sources_cited"</span>: ["https://..."]
+}</pre>
+      </div>
+      <p>Note that reviewer names and profile handles are deliberately not in the schema. See <a href="#ground-rules">ground rules</a>.</p>
+    </section>
+
+    <section id="tracks">
+      <span class="eyebrow">Two students per track</span>
+      <h2>Project tracks</h2>
+      <p>Each track has one guiding question, a set of methods to learn, a demo goal, and milestones. The goal is a working proof of concept that demonstrates the method, not a production system. A team that spends three weeks fighting a website's bot protection should switch to an API or a hand-collected sample and move on.</p>
+
+      <article class="track t1" id="track-1">
+        <div class="head"><span class="num">Track 1</span><span class="team">Team: <span class="todo">STUDENT A, STUDENT B</span></span></div>
+        <h3>Reputation data collection</h3>
+        <p class="q">What are people saying about the clinic, and where?</p>
+        <div class="cols">
+          <div>
+            <h4>Scope</h4>
+            <ul>
+              <li>Pick two or three sources, such as the clinic's Google Business Profile, Yelp, Reddit, and fertility review sites.</li>
+              <li>For each source, decide the permitted method: official API, owner data export, or careful scraping where the terms allow it.</li>
+              <li>Normalize everything into <code>reputation_item</code> records, remove duplicates, and store them.</li>
+              <li>Run collection on a schedule and add only new items.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Methods to learn</h4>
+            <div class="chips"><span>HTTP &amp; REST APIs</span><span>requests</span><span>BeautifulSoup</span><span>Playwright</span><span>robots.txt &amp; ToS</span><span>rate limiting</span><span>pagination</span><span>deduplication</span><span>SQLite / Postgres</span><span>cron / GitHub Actions</span></div>
+            <h4 style="margin-top:0.6rem">Milestones</h4>
+            <dl class="miles">
+              <dt>Wk 3–4</dt><dd>Source inventory: what each site allows, plus one working collector.</dd>
+              <dt>Wk 5–6</dt><dd>Second source, shared schema, deduplication, database.</dd>
+              <dt>Wk 7–8</dt><dd>Scheduled runs with logging and failure handling.</dd>
+            </dl>
+          </div>
+        </div>
+        <p class="demo"><b>Demo:</b> click Run, the collector pulls the latest items from each source, skips ones it has seen, and shows the new records.</p>
+      </article>
+
+      <article class="track t2" id="track-2">
+        <div class="head"><span class="num">Track 2</span><span class="team">Team: <span class="todo">STUDENT C, STUDENT D</span></span></div>
+        <h3>Reputation analysis</h3>
+        <p class="q">What are people actually unhappy or happy about?</p>
+        <div class="cols">
+          <div>
+            <h4>Scope</h4>
+            <ul>
+              <li>Define a topic list with the clinic: physician care, nursing, communication, billing and cost, scheduling and wait times, front desk, facilities, outcomes.</li>
+              <li>Score each review for overall sentiment, sentiment per topic, and severity.</li>
+              <li>Compare an LLM with structured output against a classical baseline.</li>
+              <li>Hand-label about 150 reviews and report accuracy on them.</li>
+              <li>Find emerging themes the topic list missed, using embeddings and clustering.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Methods to learn</h4>
+            <div class="chips"><span>sentiment analysis</span><span>aspect-based sentiment</span><span>text classification</span><span>embeddings</span><span>clustering</span><span>LLM APIs</span><span>JSON structured output</span><span>labeling &amp; inter-rater agreement</span></div>
+            <h4 style="margin-top:0.6rem">Milestones</h4>
+            <dl class="miles">
+              <dt>Wk 3–4</dt><dd>Topic list and labeling guide; 150 labeled reviews.</dd>
+              <dt>Wk 5–6</dt><dd>Baseline and LLM classifiers; accuracy per topic.</dd>
+              <dt>Wk 7–8</dt><dd>Severity scoring and emerging-theme detection.</dd>
+            </dl>
+          </div>
+        </div>
+        <p class="demo"><b>Demo:</b> upload a CSV of reviews, click Analyze, and get a topic breakdown with representative quotes for each topic.</p>
+      </article>
+
+      <article class="track t3" id="track-3">
+        <div class="head"><span class="num">Track 3</span><span class="team">Team: <span class="todo">STUDENT E, STUDENT F</span></span></div>
+        <h3>AI reputation scanning</h3>
+        <p class="q">What is AI saying about Reproductive Partners Fertility Center?</p>
+        <div class="cols">
+          <div>
+            <h4>Scope</h4>
+            <ul>
+              <li>Write a fixed set of about 30 questions a prospective patient would ask. Mix branded ones ("Is Reproductive Partners a good clinic?"), comparison ones ("Reproductive Partners vs …"), and open local ones ("best IVF clinic in San Diego").</li>
+              <li>Run them against several assistants and search engines on a schedule, several times each, since answers vary from run to run.</li>
+              <li>Extract whether the clinic was mentioned, its position, sentiment, competitors, cited sources, and specific claims.</li>
+              <li>Check claims against a clinic-approved fact sheet to flag outdated or wrong information.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Methods to learn</h4>
+            <div class="chips"><span>LLM APIs</span><span>prompt-set design</span><span>repeated sampling</span><span>claim extraction</span><span>fact-checking</span><span>citation analysis</span><span>generative engine optimization</span></div>
+            <h4 style="margin-top:0.6rem">Milestones</h4>
+            <dl class="miles">
+              <dt>Wk 3–4</dt><dd>Question set and clinic fact sheet; first manual run.</dd>
+              <dt>Wk 5–6</dt><dd>Automated runs and extraction into <code>ai_scan_result</code>.</dd>
+              <dt>Wk 7–8</dt><dd>Accuracy checks, a visibility score, and change over time.</dd>
+            </dl>
+          </div>
+        </div>
+        <p class="demo"><b>Demo:</b> a report showing how often the clinic appears, how it's described, which competitors show up instead, which sources the AIs rely on, and any incorrect claims.</p>
+      </article>
+
+      <article class="track t4" id="track-4">
+        <div class="head"><span class="num">Track 4</span><span class="team">Team: <span class="todo">STUDENT G, STUDENT H</span></span></div>
+        <h3>Dashboard and alerts</h3>
+        <p class="q">What's changing, and what needs someone's attention today?</p>
+        <div class="cols">
+          <div>
+            <h4>Scope</h4>
+            <ul>
+              <li>Interview clinic staff about what they'd check weekly and what they'd want to hear about right away.</li>
+              <li>Build a dashboard of rating trends, review volume, top topics and how they're moving, and AI visibility.</li>
+              <li>Write alert rules with thresholds, and test them on historical data so they don't fire too often.</li>
+              <li>Send alerts by email or Slack with a link to the evidence behind them.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Methods to learn</h4>
+            <div class="chips"><span>pandas</span><span>SQL</span><span>Streamlit</span><span>Plotly</span><span>KPI design</span><span>anomaly detection</span><span>alert thresholds</span><span>email / Slack webhooks</span></div>
+            <h4 style="margin-top:0.6rem">Milestones</h4>
+            <dl class="miles">
+              <dt>Wk 3–4</dt><dd>Staff interviews; dashboard sketch on synthetic data.</dd>
+              <dt>Wk 5–6</dt><dd>Working dashboard and first alert rules.</dd>
+              <dt>Wk 7–8</dt><dd>Alert tuning and delivery; connect live data from other tracks.</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="alerts" aria-label="Example alerts">
+          <div class="alert high"><span class="lvl">Alert</span><span>New 1-star Google review mentions billing. Open review →</span></div>
+          <div class="alert med"><span class="lvl">Trend</span><span>Communication complaints up 38% over the last 30 days vs. the prior 90.</span></div>
+          <div class="alert med"><span class="lvl">AI</span><span>2 of 5 assistants cite an outdated success-rate figure for the clinic.</span></div>
+        </div>
+        <p class="demo"><b>Demo:</b> a dashboard a clinic administrator could open on Monday morning, plus a live alert that fires on a test event. Example alerts above are synthetic.</p>
+      </article>
+    </section>
+
+    <section id="ground-rules">
+      <span class="eyebrow">Read this before collecting any data</span>
+      <h2>Ground rules: privacy and ethics</h2>
+      <p>Patients sometimes share very personal details in public reviews, such as failed cycles, diagnoses, or pregnancy loss. Being public doesn't make that information free to use however we like. Design privacy into every track from the start.</p>
+      <ul class="rules">
+        <li>No data from clinic systems. No medical records, scheduling data, or patient lists. Work only with public content, synthetic data, and materials the clinic has cleared.</li>
+        <li>Never try to identify a reviewer or link a review to a real patient. Don't store reviewer names or profile handles.</li>
+        <li>Don't send review text to an LLM provider without checking how that provider stores and uses it. Use API tiers that don't train on your inputs.</li>
+        <li>No public replies. Responding to reviews is out of scope. Providers have been fined by HHS for disclosing patient details in replies to online reviews.</li>
+        <li>No fake reviews, paid reviews, or planted content to improve how AI describes the clinic. The FTC's 2024 rule bans fake and paid reviews and review suppression.</li>
+        <li class="yes">Follow each platform's terms of service and API limits. If a site prohibits scraping, use another source.</li>
+        <li class="yes">Keep only the fields you need, and document how long data is kept and who can see it.</li>
+        <li class="yes">Report failures and limitations honestly, including where your classifiers or AI checks get things wrong.</li>
+      </ul>
+    </section>
+
+    <section id="schedule">
+      <span class="eyebrow">Quarter 1</span>
+      <h2>Schedule</h2>
+      <p>Weekly sections are mandatory. Come ready to demo what you built that week and discuss what didn't work. Track-specific milestones are listed in each <a href="#tracks">track</a>.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Week</th><th>Whole-group topic</th><th>Due at section</th></tr></thead>
+          <tbody>
+            <tr><td class="wk">01</td><td><span class="topic">Kickoff: reputation in fertility care</span></td><td class="task">Pick tracks. Agree on the shared data contract.</td></tr>
+            <tr><td class="wk">02</td><td><span class="topic">Privacy, HIPAA, terms of service, and the FTC review rule</span></td><td class="task">Synthetic dataset ready. Each team writes its data-handling plan.</td></tr>
+            <tr><td class="wk">03</td><td><span class="topic">Working with APIs and LLMs</span></td><td class="task">Track plan and first prototype.</td></tr>
+            <tr><td class="wk">04</td><td><span class="topic">Evaluation: how do we know it works?</span></td><td class="task">Each track defines its evaluation metric.</td></tr>
+            <tr><td class="wk">05</td><td><span class="topic">Structured outputs and agent workflows</span></td><td class="task">Track milestone check-in.</td></tr>
+            <tr><td class="wk">06</td><td><span class="topic">Visiting the clinic's patient-experience team</span></td><td class="task">Demo to clinic staff; collect feedback.</td></tr>
+            <tr class="milestone"><td class="wk">07</td><td><span class="topic">Checkpoint</span></td><td class="task">Each track demos a working proof of concept.</td></tr>
+            <tr><td class="wk">08</td><td><span class="topic">Generative engine optimization and AI search</span></td><td class="task">Track milestone check-in.</td></tr>
+            <tr><td class="wk">09</td><td><span class="topic">Integration</span></td><td class="task">Connect the tracks through the shared schema; run end to end.</td></tr>
+            <tr class="milestone"><td class="wk">10</td><td><span class="topic">Demo day and proposals</span></td><td class="task">Combined demo, final report, and Quarter 2 proposal.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="deliverables">
+      <span class="eyebrow">What you turn in</span>
+      <h2>Deliverables</h2>
+      <div class="deliv">
+        <div><span class="when">Week 02</span><h3>Data-handling plan</h3><p>Per track: sources, permitted methods, what's stored, and for how long.</p></div>
+        <div><span class="when">Week 07</span><h3>Track checkpoint</h3><p>A repo that runs your proof of concept on the shared synthetic data.</p></div>
+        <div><span class="when">Week 10</span><h3>Report and demo</h3><p>A reproducible track with an honest evaluation, plus the combined demo.</p></div>
+        <div><span class="when">Week 10</span><h3>Q2 proposal</h3><p>A two-page plan to extend your track, with an evaluation plan.</p></div>
+      </div>
+    </section>
+
+    <section id="people">
+      <span class="eyebrow">Who to ask</span>
+      <h2>Mentors and office hours</h2>
+      <dl class="people">
+        <dt>Faculty mentor</dt><dd><span class="todo">NAME, email</span></dd>
+        <dt>Industry mentor</dt><dd><span class="todo">YOUR NAME, title</span>, Reproductive Partners Fertility Center</dd>
+        <dt>Office hours</dt><dd><span class="todo">Day, time, location / Zoom link</span></dd>
+      </dl>
+      <p>If you'd like to meet at another time, send an email and we'll find a slot.</p>
+    </section>
+
+    <section id="resources">
+      <span class="eyebrow">Further reading</span>
+      <h2>Resources</h2>
+      <ul>
+        <li><a href="https://www.hhs.gov/about/news/2023/06/05/hhs-office-civil-rights-reaches-agreement-health-care-provider-new-jersey-disclosed-phi-response-negative-online-reviews.html" target="_blank" rel="noopener">HHS OCR settlement over replies to negative online reviews (2023)</a></li>
+        <li><a href="https://www.ftc.gov/news-events/news/press-releases/2024/08/federal-trade-commission-announces-final-rule-banning-fake-reviews-testimonials" target="_blank" rel="noopener">FTC final rule banning fake reviews and testimonials (2024)</a></li>
+        <li><span class="todo">Clinic fact sheet for Track 3 accuracy checks</span></li>
+        <li><span class="todo">Readings on aspect-based sentiment, LLM agents, and generative engine optimization</span></li>
+      </ul>
+    </section>
+
+    <footer>Yellow highlights mark details still to fill in. All example reviews, records, and alerts on this page are synthetic.</footer>
+  </main>
+</div>
+</body>
+</html>
