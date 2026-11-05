@@ -196,6 +196,17 @@ html { scroll-behavior: smooth; }
         <span><b>Industry partner:</b> Reproductive Partners Fertility Center - San Diego</span>
         <span><b>Mentors:</b> Gabriel Andres Garzo, Brooke Betterton, Tamar Schaap</span>
         <span><b>Team Websites:</b> <a href="https://rpsandiegocom.sharepoint.com/sites/RPSDUCSDCapstoneProject" target="_blank" rel="noopener">RPSD–UCSD Capstone SharePoint</a></span>
+        <span><b>Team Websites:</b>
+          <a href="https://rpsandiegocom.sharepoint.com/sites/RPSDUCSDCapstoneProject"
+             target="_blank" rel="noopener">
+            RPSD–UCSD Capstone SharePoint
+          </a>
+          |
+          <a href="https://github.com/MaayahGa/RPSD-Capstone"
+             target="_blank" rel="noopener">
+            GitHub Repository
+          </a>
+        </span>
       </div>
     </header>
 
@@ -246,52 +257,6 @@ html { scroll-behavior: smooth; }
         <a class="node n4" href="#track-4"><span class="n">Track 4</span><h4>Dashboard &amp; alerts</h4><p>Trends over time, plus alerts when something needs a person's attention.</p></a>
       </div>
       <p class="arch-note">Collection → Analysis → Dashboard. AI scanning feeds the dashboard directly.</p>
-    </section>
-
-    <section id="contract">
-      <span class="eyebrow">Agreed in week 1</span>
-      <h2>Shared data contract</h2>
-      <p>Every team reads and writes these two record types. Until the real pipeline exists, everyone develops against the same set of about 100 synthetic reviews and 20 synthetic AI answers, so all four tracks can start in week 2.</p>
-      <div class="track-code" style="display:grid;gap:0.75rem;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));">
-<pre><span class="c">// reputation_item (Track 1 writes, Track 2 enriches)</span>
-{
-  <span class="k">"id"</span>: "google_8f3a21",
-  <span class="k">"source"</span>: "google",
-  <span class="k">"collected_at"</span>: "2026-10-14T09:00:00Z",
-  <span class="k">"posted_at"</span>: "2026-10-12",
-  <span class="k">"rating"</span>: 2,
-  <span class="k">"text"</span>: "Doctors are great, but nobody
-           returned my call for three days.",
-  <span class="k">"url"</span>: "https://...",
-  <span class="k">"location"</span>: "<span class="todo">clinic site</span>",
-
-  <span class="c">// added by Track 2</span>
-  <span class="k">"sentiment"</span>: "mixed",
-  <span class="k">"aspects"</span>: {
-    "physician": "positive",
-    "communication": "negative"
-  },
-  <span class="k">"severity"</span>: "moderate"
-}</pre>
-<pre><span class="c">// ai_scan_result (Track 3 writes)</span>
-{
-  <span class="k">"run_date"</span>: "2026-10-14",
-  <span class="k">"engine"</span>: "perplexity",
-  <span class="k">"prompt_id"</span>: "Q07",
-  <span class="k">"prompt"</span>: "What do patients say about
-             Reproductive Partners?",
-  <span class="k">"answer"</span>: "...",
-  <span class="k">"clinic_mentioned"</span>: true,
-  <span class="k">"rank"</span>: 1,
-  <span class="k">"sentiment"</span>: "positive",
-  <span class="k">"claims"</span>: [
-    { "text": "...", "accurate": false }
-  ],
-  <span class="k">"competitors"</span>: ["..."],
-  <span class="k">"sources_cited"</span>: ["https://..."]
-}</pre>
-      </div>
-      <p>Note that reviewer names and profile handles are deliberately not in the schema. See <a href="#ground-rules">ground rules</a>.</p>
     </section>
 
     <section id="tracks">
@@ -441,6 +406,7 @@ html { scroll-behavior: smooth; }
       <div class="table-wrap">
         <table>
           <thead><tr><th>Week</th><th>Whole-group topic</th><th>Due at section</th></tr></thead>
+          <thead><tr><th>Week</th><th>Whole-group topic</th><th>Due at section</th><th>Discussion Content</th></tr></thead>
           <tbody>
             <tr><td class="wk">01</td><td><span class="topic">Kickoff: reputation in fertility care</span></td><td class="task">NA; <a href="Intro_week_slides.pdf" target="_blank" rel="noopener">Slides Week 1</a></td></tr>
             <tr><td class="wk">02</td><td><span class="topic">NDAs, Badges, and Research Review. Introduce Pain Points and Tracks.</span></td><td class="task">Individual research into Automated/AI Reputation Management methods.</td></tr>
@@ -448,6 +414,8 @@ html { scroll-behavior: smooth; }
             <tr><td class="wk">04</td><td><span class="topic">TBD</span></td><td class="task">TBD</td></tr>
             <tr><td class="wk">05</td><td><span class="topic">TBD</span></td><td class="task">TBD</td></tr>
             <tr><td class="wk">06</td><td><span class="topic">TBD</span></td><td class="task">TBD</td></tr>
+            <tr><td class="wk">06</td><td><span class="topic">TBD</span></td><td class="task">TBD</td><td class="task"><a href="https://rpsandiegocom.sharepoint.com/:w:/r/sites/RPSDUCSDCapstoneProject/_layouts/15/Doc.aspx?sourcedoc=%7BF04D22D7-96D2-4983-A8D6-86A3F5BFAE93%7D&amp;file=Week%C2%A05%20Discussion%20Content.docx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1"
+                                                                                                                         target="_blank" rel="noopener">Week 6 Discussion Content</a></td></tr>
             <tr class="milestone"><td class="wk">07</td><td><span class="topic">Checkpoint</span></td><td class="task">TBD</td></tr>
             <tr><td class="wk">08</td><td><span class="topic">TBD</span></td><td class="task">TBD</td></tr>
             <tr><td class="wk">09</td><td><span class="topic">TBD</span></td><td class="task">TBD</td></tr>
